@@ -54,51 +54,30 @@ function getPlots(id) {
         // Render the plot to the div tag with id "bar"
         Plotly.newPlot("bar", data, layout);
 
-
-        var allSampleValues = sampledata.samples[0].sample_values
-        console.log(allSampleValues)
-
-        var allLabels =  sampledata.samples[0].otu_labels
-        console.log(allLabels)
         
         // Set trace for the bubble plot
         var trace1 = {
-            x: ids,
-            y: allSampleValues,
-            text:[allLabels],
-            mode: 'markers',
+            x: sampledata.samples[0].otu_ids,
+            y: sampledata.samples[0].sample_values,
+            mode: "markers",
             marker: {
-                size:[allSampleValues],
-                color:[ids]
-                }
-            };
-    
-            var data1 =[trace1]
-    
-            var layout1 = {
-                title: 'Sample Value',
-                showlegend: false,
-                height: 600,
-                width: 600
-            };
-            // Render the plot to the div tag with id "bubble"
-            Plotly.newPlot("bubble", data1, layout1);
-
+                size: sampledata.samples[0].sample_values,
+                color: sampledata.samples[0].otu_ids
+            },
+            text:  sampledata.samples[0].otu_labels
+        };
+        var layout_2 = {
+            xaxis:{title: "OTU ID"},
+            height: 600,
+            width: 1000
+        };
+        var data1 = [trace1];
+        
+        Plotly.newPlot("bubble", data1, layout_2);
         });
     }
 
 getPlots();
-
-
-
-// 3.Create a bubble chart that displays each sample.
-
-// * Use `otu_ids` for the x values.
-// * Use `sample_values` for the y values.
-// * Use `sample_values` for the marker size.
-// * Use `otu_ids` for the marker colors.
-// * Use `otu_labels` for the text values.
-
 
 
 // 4. Display the sample metadata, i.e., an individual's demographic information.
