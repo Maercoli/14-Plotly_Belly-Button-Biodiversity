@@ -1,7 +1,4 @@
 // 1.Use D3 library to read in `samples.json`.
-// d3.json("./data/samples.json", function(data) {
-//     console.log(data);
-// });
 function retreiveData(sample) {
     d3.json("./data/samples.json").then(data=> {
         console.log(data)
@@ -10,54 +7,87 @@ function retreiveData(sample) {
 
 retreiveData();
 
-// 2.Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
 
-// * Use `sample_values` as the values for the bar chart.= samples.samples_values
-// * Use `otu_ids` as the labels for the bar chart. = samples.otu_ids
-// * Use `otu_labels` as the hovertext for the chart. = samples.out_labels
-function getBarPlot(id) {
+function getPlots(id) {
+
     //Read samples.json
-        d3.json("./data/samples.json").then (sampledata =>{
-            //console.log(sampledata)
-            var ids = sampledata.samples[0].otu_ids;
-            //console.log(ids)
-            var sampleValues =  sampledata.samples[0].sample_values.slice(0,10).reverse();
-            //console.log(sampleValues)
-            var labels =  sampledata.samples[0].otu_labels.slice(0,10);
-            //console.log (labels)
+    d3.json("./data/samples.json").then (sampledata =>{
+        console.log(sampledata)
+            
+        //Grab values from response json object to build plots
+        var ids = sampledata.samples[0].otu_ids;
+        console.log(ids)
+          
+        var sampleValues =  sampledata.samples[0].sample_values.slice(0,10).reverse();
+        console.log(sampleValues)
+            
+        var labels =  sampledata.samples[0].otu_labels.slice(0,10);
+        console.log (labels)
+            
+        var OTU_top = (sampledata.samples[0].otu_ids.slice(0, 10)).reverse();
+            
+        //get the otu id's to the desired form for the plot
+        var OTU_id = OTU_top.map(d => "OTU " + d);
+        console.log(OTU_id)
 
-            var OTU_top = ( sampledata.samples[0].otu_ids.slice(0, 10)).reverse();
-            // get the otu id's to the desired form for the plot
-            var OTU_id = OTU_top.map(d => "OTU " + d);
-            //console.log(OTU_id)
-
-            var trace = {
-                x: sampleValues,
-                y: OTU_id,
-                text: labels,
-                type: "bar",
-                orientation: "h"
+        //Create trace for the bar plot
+        var trace = {
+            x: sampleValues,
+            y: OTU_id,
+            text: labels,
+            type: "bar",
+            orientation: "h"
             }
             
-            var data = [trace]
+        var data = [trace]
 
-            var layout = {
-                title:"Top 10 OTUs",
-                margin:{
-                    l: 100,
-                    r: 100, 
-                    t: 100,
-                    b: 100
+        var layout = {
+            title:"Top 10 OTUs",
+            margin:{
+            l: 100,
+            r: 100, 
+            t: 100,
+            b: 100
+            }
+        }
+            
+        // Render the plot to the div tag with id "bar"
+        Plotly.newPlot("bar", data, layout);
+
+
+        var allSampleValues = sampledata.samples[0].sample_values
+        console.log(allSampleValues)
+
+        var allLabels =  sampledata.samples[0].otu_labels
+        console.log(allLabels)
+        
+        // Set trace for the bubble plot
+        var trace1 = {
+            x: ids,
+            y: allSampleValues,
+            text:[allLabels],
+            mode: 'markers',
+            marker: {
+                size:[allSampleValues],
+                color:[ids]
                 }
-            }
-            
-            // Render the plot to the div tag with id "plot"
-            Plotly.newPlot("bar", data, layout);
+            };
+    
+            var data1 =[trace1]
+    
+            var layout1 = {
+                title: 'Sample Value',
+                showlegend: false,
+                height: 600,
+                width: 600
+            };
+            // Render the plot to the div tag with id "bubble"
+            Plotly.newPlot("bubble", data1, layout1);
 
         });
     }
 
-getBarPlot();
+getPlots();
 
 
 
@@ -77,9 +107,3 @@ getBarPlot();
 
 // 6. Update all of the plots any time that a new sample is selected.
 
-
-
-  
-
-
-  
