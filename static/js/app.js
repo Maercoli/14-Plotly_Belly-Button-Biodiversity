@@ -1,21 +1,40 @@
-// 1.Use D3 library to read in `samples.json`.
-function retreiveData(sample) {
-    d3.json("./data/samples.json").then(data=> {
-        console.log(data)
+// create the function to get the necessary data
+function getDemoInfo(samples) {
+    // read the json file to get data
+    d3.json("./data/samples.json").then((data)=> {
+    // get the metadata info for the demographic panel
+        var metadata = data.metadata;
+        console.log(metadata)
+        
+        // filter meta data info by id
+        var idArray = metadata.filter(sampleObject => sampleObject.id == samples);
+        var id = idArray[0]
+        console.log(id)
+        
+        //select demographic panel to put data
+        var demographicInfo = d3.select("#sample-metadata");      
+
+        //clean demographic panel
+        demographicInfo.html("")
+
+        //populate with result_inital
+        Object.entries(id).forEach(([key, value])=>{
+            console.log(key, value)
+            demographicInfo.append("h5").text(`${key}: ${value}`);
+        });        
+
     });
-};
-
-retreiveData();
+}
 
 
-function getPlots(id) {
+function getPlots(samples) {
 
     //Read samples.json
     d3.json("./data/samples.json").then (sampledata =>{
         console.log(sampledata)
             
         //Grab values from response json object to build plots
-        var ids = sampledata.samples[0].otu_ids;
+        var ids = sampledata[0].otu_ids;
         console.log(ids)
           
         var sampleValues =  sampledata.samples[0].sample_values.slice(0,10).reverse();
@@ -75,14 +94,60 @@ function getPlots(id) {
         
         Plotly.newPlot("bubble", data1, layout_2);
         });
-    }
 
-getPlots();
+        // Create trace for the gauge chart
+    //     var data = [
+    //         {
+    //           domain: { x: [0, 1], y: [0, 1] },
+    //           value: 450,
+    //           title: { text: "Belly Button Washing Frequency" },
+    //           type: "indicator",
+    //           mode: "gauge+number+delta",
+    //           delta: { reference: 380 },
+    //           gauge: {
+    //             axis: { range: [null, 500] },
+    //             steps: [
+    //               { range: [0, 250], color: "lightgray" },
+    //               { range: [250, 400], color: "gray" }
+    //             ],
+    //             threshold: {
+    //               line: { color: "red", width: 4 },
+    //               thickness: 0.75,
+    //               value: 490
+    //             }
+    //           }
+    //         }
+    //       ];
+          
+    //       var layout = { width: 600, height: 450, margin: { t: 0, b: 0 } };
+    //       Plotly.newPlot('gauge', data, layout);
+
+}
 
 
-// 4. Display the sample metadata, i.e., an individual's demographic information.
+function init() {
+    var selector = d3.select("#selDataset");
 
-// 5. Display each key-value pair from the metadata JSON object somewhere on the page.
+    //Read samples.json
+    d3.json("./data/samples.json").then (data =>{
+        
+        var sampleNames = data.names
+        sampleNames.forEach((samples) => {
+            selector
+                .append("option").text(samples).property("value", samples);
+        });
+    
+        var firstSample = sampleNames[0]
 
-// 6. Update all of the plots any time that a new sample is selected.
+        getDemoInfo(firstSample);
+        getPlots(firstSample);
+    });
+}
+
+function optionChanged(newSample) {
+    getDemoInfo(newSample);
+    getPlots(newSample);
+}
+
+init();
 
