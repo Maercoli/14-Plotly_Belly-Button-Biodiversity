@@ -47,22 +47,11 @@ It's outline bellow each step that I took to accomplish this task.
 7. I modified the initial layout of the dashboard.
 
 
-## Advanced Challenge Assignment (Optional)
-
-The following task is advanced and therefore optional.
-
-* Adapt the Gauge Chart from <https://plot.ly/javascript/gauge-charts/> to plot the weekly washing frequency of the individual.
-
-* You will need to modify the example gauge code to account for values ranging from 0 through 9.
-
-* Update the chart whenever a new sample is selected.
-
-![Weekly Washing Frequency Gauge](Images/gauge.png)
-
 ## Deployment
 
-* Deploy your app to a free static page hosting service, such as GitHub Pages. Submit the links to your deployment and your GitHub repo.
+* This app has been deployed in a free static page hosting service, the GitHub Pages. Page link: (https://maercoli.github.io/Plotly_challenge/)
 
+-----
 
 ### About the Data
 
