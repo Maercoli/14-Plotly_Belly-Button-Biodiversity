@@ -99,7 +99,6 @@ function getPlots(sample) {
         
         Plotly.newPlot("bubble", data1, layout_2);
         });
-
     }
 
 // display the default plots
